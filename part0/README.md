@@ -10,5 +10,5 @@ sequenceDiagram
     server-->>browser: HTML URL Redirect to exampleapp/notes 
     deactivate server
 
-    Note over browser, server: [ref] Browser follows redirect and reloads the notes page.
+    Note over browser, server: Load Page (same flow as prev diagram)
 ```
