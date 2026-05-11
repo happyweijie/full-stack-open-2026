@@ -5,27 +5,39 @@ const increment = (val, setter) => {
   return () => setter(val + 1)
 }
 
+const score = (good, neutral, bad) => good - bad
+
 const StatsDisplay = ({ label, data }) => <p>{label} {data}</p>
+
+const Statistics = ({ good, neutral, bad }) => {
+  const all = good + neutral + bad
+
+  return (
+    <div>
+      <h1>statistics</h1>
+      <StatsDisplay label="good" data={good} />
+      <StatsDisplay label="neutral" data={neutral} />
+      <StatsDisplay label="bad" data={bad} />
+      <StatsDisplay label="all" data={all} />
+      <StatsDisplay label="average" data={score(good, neutral, bad) / all} />
+      <StatsDisplay label="positive" data={good / all * 100} />
+    </div>
+  )
+}
 
 const App = () => {
   const [good, setGood] = useState(0)
-  const g = "good"
   const [neutral, setNeutral] = useState(0)
-  const n = "neutral"
   const [bad, setBad] = useState(0)
-  const b = "bad"
 
   return (
     <div>
       <h1>give feedback</h1>
-      <Button text={g} onClick={increment(good, setGood)}/>
-      <Button text={n} onClick={increment(neutral, setNeutral)}/>
-      <Button text={b} onClick={increment(bad, setBad)}/>
+      <Button text="good" onClick={increment(good, setGood)} />
+      <Button text="neutral" onClick={increment(neutral, setNeutral)} />
+      <Button text="bad" onClick={increment(bad, setBad)} />
 
-      <h1>statistics</h1>
-      <StatsDisplay label={g} data={good} />
-      <StatsDisplay label={n} data={neutral} />
-      <StatsDisplay label={b} data={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />  
     </div>
   )
 }
