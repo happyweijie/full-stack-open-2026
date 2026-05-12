@@ -14,7 +14,9 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-  const handleClick = () => {
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+  const handleNextClick = () => {
     let next;
 
     // Loop under we get a random number different from current value
@@ -28,10 +30,17 @@ const App = () => {
     setSelected(next) 
   }
 
+  const handleVote = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button label="next anecdote" onClick={handleClick}/>
+      <Button label="vote" onClick={handleVote}/>
+      <Button label="next anecdote" onClick={handleNextClick}/>
     </div>
   )
 }
