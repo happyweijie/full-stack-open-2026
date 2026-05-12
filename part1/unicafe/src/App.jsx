@@ -1,40 +1,14 @@
 import { useState } from 'react'
-import Button from './Button'
-
-const increment = (val, setter) => {
-  return () => setter(val + 1)
-}
-
-const score = (good, neutral, bad) => good - bad
-
-const StatsDisplay = ({ label, data }) => <p>{label} {data}</p>
-
-const Statistics = ({ good, neutral, bad }) => {
-  const all = good + neutral + bad
-
-  return (
-    <div>
-      <h1>statistics</h1>
-
-      {all === 0 
-        ? <p>No feedback given</p> 
-        : <>
-          <StatsDisplay label="good" data={good} />
-          <StatsDisplay label="neutral" data={neutral} />
-          <StatsDisplay label="bad" data={bad} />
-          <StatsDisplay label="all" data={all} />
-          <StatsDisplay label="average" data={score(good, neutral, bad) / all} />
-          <StatsDisplay label="positive" data={good / all * 100} />
-        </>
-      }
-    </div>
-  )
-}
+import Button from './components/Button'
+import Statistics from './components/Statistics'
 
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const increment = (val, setter) => {
+    return () => setter(val + 1)
+  }
 
   return (
     <div>
