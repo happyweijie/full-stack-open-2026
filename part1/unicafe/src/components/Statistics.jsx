@@ -10,15 +10,16 @@ const Statistics = ({ good, neutral, bad }) => {
 
       {all === 0 
         ? <p>No feedback given</p> 
-        : <table>
-					<StatisticLine label="good" data={good} />
-          <StatisticLine label="neutral" data={neutral} />
-          <StatisticLine label="bad" data={bad} />
-          <StatisticLine label="all" data={all} />
-          <StatisticLine label="average" data={score / all} />
-          <StatisticLine label="positive" data={good / all * 100 + " %"} />
-        </table>
-      }
+        : (
+					<table>
+						<StatisticLine label="good" data={good} />
+						<StatisticLine label="neutral" data={neutral} />
+						<StatisticLine label="bad" data={bad} />
+						<StatisticLine label="all" data={all} />
+						<StatisticLine label="average" data={score / all} />
+						<StatisticLine label="positive" data={good / all * 100 + " %"} />
+					</table>
+			)}
     </div>
   )
 }
