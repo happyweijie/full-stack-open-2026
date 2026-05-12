@@ -1,3 +1,10 @@
-const StatisticLine = ({ label, data }) => <p>{label} {data}</p>
+const StatisticLine = ({ label, data }) => {
+  return (
+    <tr>
+      <td>{label}</td>
+      <td>{data}</td>
+    </tr>
+  )
+}
 
 export default StatisticLine
