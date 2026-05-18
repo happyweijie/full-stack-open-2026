@@ -8,11 +8,15 @@ const PersonForm = ({ persons, setPersons }) => {
   const addPerson = (persons, setPersons) => (event) => {
     event.preventDefault()
     
-    const newPerson = {
-      name: newName
+    // check if the name already exists
+    if (persons.some(p => p.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+      return
     }
 
-    setPersons(persons.concat(newPerson))
+    setPersons(persons.concat({
+      name: newName
+    }))
     setNewName('')
   }
 
