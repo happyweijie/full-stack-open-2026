@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
 const PersonForm = ({ persons, setPersons }) => {
-
+  // new name to be added to the phonebook
   const [newName, setNewName] = useState('')
   const handleNameChange = (event) => setNewName(event.target.value)
 
+  // add a new name to the phonebook if it doesn't already exist
   const addPerson = (persons, setPersons) => (event) => {
     event.preventDefault()
     
