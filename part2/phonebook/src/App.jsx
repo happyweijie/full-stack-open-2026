@@ -10,13 +10,24 @@ const App = () => {
     { name: 'Mary Poppendieck', phone: '39-23-6423122', id: 4 }
   ])
 
+  // new search query
+  const [query, setQuery] = useState('')
+  const handleQueryChange = (event) => setQuery(event.target.value)
+
+  const personsToShow = query === ''
+    ? persons
+    : persons.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()))
+
   return (
     <div>
       <h2>Phonebook</h2>
+      filter shown with <input value={query} onChange={handleQueryChange} />
+
+      <h2>Add a new</h2>
       <PersonForm persons={persons} setPersons={setPersons} />
 
       <h2>Numbers</h2>
-      <PersonList persons={persons} />
+      <PersonList persons={personsToShow} />
     </div>
   )
 }
