@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonList'
+import SearchBar from './components/SearchBar'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,10 +10,23 @@ const App = () => {
     { name: 'Dan Abramov', phone: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', phone: '39-23-6423122', id: 4 }
   ])
+  
+  // add a new person to the phonebook if name doesn't already exist
+  const handleAddPerson = (name, phone) => {
+    if (persons.some((p) => p.name === name)) {
+      alert(`${name} is already added to phonebook`)
+      return
+    }
 
-  // new search query
+    setPersons(persons.concat({
+      name,
+      phone,
+      id: persons.length + 1
+    }))
+  }
+
+  // search query
   const [query, setQuery] = useState('')
-  const handleQueryChange = (event) => setQuery(event.target.value)
 
   const personsToShow = query === ''
     ? persons
@@ -21,12 +35,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      filter shown with <input value={query} onChange={handleQueryChange} />
+      <SearchBar query={query} setQuery={setQuery} />
 
-      <h2>Add a new</h2>
-      <PersonForm persons={persons} setPersons={setPersons} />
+      <h3>Add a new contact</h3>
+      <PersonForm onAddPerson={handleAddPerson} />
 
-      <h2>Numbers</h2>
+      <h3>Numbers</h3>
       <PersonList persons={personsToShow} />
     </div>
   )
