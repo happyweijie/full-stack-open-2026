@@ -5,6 +5,10 @@ const PersonForm = ({ persons, setPersons }) => {
   const [newName, setNewName] = useState('')
   const handleNameChange = (event) => setNewName(event.target.value)
 
+  // new name to be added to the phonebook
+  const [newPhone, setNewPhone] = useState('')
+  const handlePhoneChange = (event) => setNewPhone(event.target.value)
+
   // add a new name to the phonebook if it doesn't already exist
   const addPerson = (persons, setPersons) => (event) => {
     event.preventDefault()
@@ -16,7 +20,9 @@ const PersonForm = ({ persons, setPersons }) => {
     }
 
     setPersons(persons.concat({
-      name: newName
+      name: newName,
+      phone: newPhone,
+      id: persons.length + 1
     }))
     setNewName('')
   }
@@ -24,7 +30,10 @@ const PersonForm = ({ persons, setPersons }) => {
   return (
     <form onSubmit={addPerson(persons, setPersons)} >
       <div>
-        name: <input value={newName} onChange={handleNameChange} />
+        name: <input value={newName} onChange={handleNameChange} required/>
+      </div>
+      <div>
+        phone: <input value={newPhone} onChange={handlePhoneChange} required/>
       </div>
       <div>
         <button type="submit">add</button>
