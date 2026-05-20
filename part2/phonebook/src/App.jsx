@@ -25,9 +25,9 @@ const App = () => {
   // search query
   const [query, setQuery] = useState('')
 
-  const personsToShow = query === ''
+  const personsToShow = query.trim() === ''
     ? persons
-    : persons.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()))
+    : persons.filter((p) => p.name.toLowerCase().includes(query.trim().toLowerCase()))
 
   return (
     <div>
