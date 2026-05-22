@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonList'
 import SearchBar from './components/SearchBar'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '040-123456', id: 1 },
-  ])
+  const [persons, setPersons] = useState([])
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons")
+      .then(response => setPersons(response.data))
+  }, [])
   
   // add a new person to the phonebook if name doesn't already exist
   const handleAddPerson = (name, phone) => {
@@ -16,9 +20,9 @@ const App = () => {
     }
 
     setPersons(persons.concat({
-      name,
-      phone,
-      id: persons.length + 1
+      name: name,
+      number: phone,
+      id: String(persons.length + 1)
     }))
   }
 
