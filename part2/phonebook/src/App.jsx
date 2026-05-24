@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 
 import PersonForm from './components/PersonForm'
@@ -14,21 +13,40 @@ const App = () => {
   }, [])
   
   // add a new person to the phonebook if name doesn't already exist
-  const handleAddPerson = (name, phone) => {
+  const handleAddPerson = (name, number) => {
     if (persons.some((p) => p.name === name)) {
-      alert(`${name} is already added to phonebook`)
-      return
+      if (window.confirm(`${name} is already added to phonebook, replace the old number with a new one?`)) {
+        handleUpdatePerson(name, number)
+        return
+      }
     }
 
     const newPerson = {
       name: name,
-      number: phone
+      number: number
     }
 
     personService.createPerson(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
       })
+  }
+
+  const handleUpdatePerson = (name, number) => {
+      const oldPerson = persons.find(p => p.name === name)
+      const updatedPerson = {
+        ...oldPerson,
+        number: number
+      }
+      
+      personService.updatePerson(oldPerson.id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => {
+            return p.id === oldPerson.id 
+              ? returnedPerson 
+              : p
+          }))
+        })
   }
 
   const handleDeletePerson = (id) => {
