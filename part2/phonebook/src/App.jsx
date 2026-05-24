@@ -19,11 +19,15 @@ const App = () => {
       return
     }
 
-    setPersons(persons.concat({
+    const newPerson = {
       name: name,
-      number: phone,
-      id: String(persons.length + 1)
-    }))
+      number: phone
+    }
+
+    axios.post("http://localhost:3001/persons", newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+      })
   }
 
   // search query
