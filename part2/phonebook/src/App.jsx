@@ -9,7 +9,7 @@ import SearchBar from './components/SearchBar'
 const App = () => {
   const [persons, setPersons] = useState([])
   useEffect(() => {
-    personService.getAll()
+    personService.getAllPersons()
       .then(initialPersons => setPersons(initialPersons))
   }, [])
   
@@ -25,9 +25,16 @@ const App = () => {
       number: phone
     }
 
-    personService.create(newPerson)
+    personService.createPerson(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+      })
+  }
+
+  const handleDeletePerson = (id) => {
+    personService.deletePerson(id)
+      .then(response => {
+        setPersons(persons.filter(p => p.id !== id))
       })
   }
 
@@ -47,7 +54,7 @@ const App = () => {
       <PersonForm onAddPerson={handleAddPerson} />
 
       <h3>Numbers</h3>
-      <PersonList persons={personsToShow} />
+      <PersonList persons={personsToShow} onDeletePerson={handleDeletePerson} />
     </div>
   )
 }
