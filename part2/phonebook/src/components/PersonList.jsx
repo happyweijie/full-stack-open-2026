@@ -1,9 +1,7 @@
 const PersonList = ({ persons, onDeletePerson }) => {
-  const handleDeleteClick = (id) => () => {
-    const person = persons.find(p => p.id === id)
-    
-    if (window.confirm(`Delete ${person.name}?`)) {
-      onDeletePerson(id)
+  const handleDeleteClick = (name) => () => {
+    if (window.confirm(`Delete ${name}?`)) {
+      onDeletePerson(name)
     }
   }
 
@@ -13,7 +11,7 @@ const PersonList = ({ persons, onDeletePerson }) => {
         ? <li>No contacts.</li>
         : persons.map(p => {
           return <li key={p.id}>
-            {p.name} {p.number} <button onClick={handleDeleteClick(p.id)}>delete</button>
+            {p.name} {p.number} <button onClick={handleDeleteClick(p.name)}>delete</button>
             </li>
         })
       }
