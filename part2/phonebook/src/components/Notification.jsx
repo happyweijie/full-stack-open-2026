@@ -1,5 +1,6 @@
-const Notification = ({ message }) => {
+const Notification = ({ message, variant }) => {
   const baseStyle = {
+    backgroundColor: 'lightgrey',
     borderStyle: 'solid',
     borderRadius: '5px',
     padding: '10px',
@@ -8,7 +9,11 @@ const Notification = ({ message }) => {
 
   const successStyle = {
     color: 'green',
-    backgroundColor: 'lightgrey',
+    ...baseStyle
+  }
+
+  const errorStyle = {
+    color: 'red',
     ...baseStyle
   }
 
@@ -16,8 +21,12 @@ const Notification = ({ message }) => {
     return null
   }
 
+  const displayStyle = variant === 'success' 
+    ? successStyle 
+    : errorStyle
+
   return (
-    <div style={successStyle}>
+    <div style={displayStyle}>
       {message}
     </div>
   )

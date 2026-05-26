@@ -14,7 +14,19 @@ const App = () => {
   }, [])
 
   const [notification, setNotification] = useState(null)
-  
+  const [notificationVariant, setNotificationVariant] = useState(null)
+  const showNotification = (message, variant) => {
+    // display notification 
+    setNotification(message, true)
+    setNotificationVariant(variant)
+
+    // hide notification after 3s
+    setTimeout(() => {
+      setNotification(null)
+      setNotificationVariant(null)
+    }, 3000)
+  }
+
   // add a new person to the phonebook if name doesn't already exist
   const handleAddPerson = (name, number) => {
     if (persons.some((p) => p.name === name)) {
@@ -34,8 +46,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         
         // notification 
-        setNotification(`Added ${returnedPerson.name}`)
-        setTimeout(() => setNotification(null), 3000)
+        showNotification(
+          `Added ${returnedPerson.name}`, 
+          'success'
+        )
       })
   }
 
@@ -54,10 +68,10 @@ const App = () => {
               : p
           }))
 
-          setNotification(
-            `Updated ${returnedPerson.name}'s number to ${returnedPerson.number}`
+          showNotification(
+            `Updated ${returnedPerson.name}'s number to ${returnedPerson.number}`, 
+            'success'
           )
-          setTimeout(() => setNotification(null), 3000)
         })
         
   }
@@ -68,6 +82,17 @@ const App = () => {
     personService.deletePerson(person.id)
       .then(() => {
         setPersons(persons.filter(p => p.id !== person.id))
+
+        showNotification(
+          `Information of ${name} removed from server`,
+          'success'
+        )
+      })
+      .catch(() => {
+        showNotification(
+          `Information of ${name} already removed from server`,
+          'error'
+        )
       })
   }
 
@@ -82,7 +107,10 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={notification} />
+      <Notification 
+        message={notification} 
+        variant={notificationVariant} 
+      />
 
       <SearchBar query={query} setQuery={setQuery} />
 
