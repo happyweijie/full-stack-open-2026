@@ -4,6 +4,7 @@ import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonList'
 import SearchBar from './components/SearchBar'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,6 +12,8 @@ const App = () => {
     personService.getAllPersons()
       .then(initialPersons => setPersons(initialPersons))
   }, [])
+
+  const [notification, setNotification] = useState(null)
   
   // add a new person to the phonebook if name doesn't already exist
   const handleAddPerson = (name, number) => {
@@ -29,6 +32,10 @@ const App = () => {
     personService.createPerson(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        
+        // notification 
+        setNotification(`Added ${returnedPerson.name}`)
+        setTimeout(() => setNotification(null), 3000)
       })
   }
 
@@ -46,7 +53,13 @@ const App = () => {
               ? returnedPerson 
               : p
           }))
+
+          setNotification(
+            `Updated ${returnedPerson.name}'s number to ${returnedPerson.number}`
+          )
+          setTimeout(() => setNotification(null), 3000)
         })
+        
   }
 
   const handleDeletePerson = (id) => {
@@ -66,6 +79,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notification} />
+
       <SearchBar query={query} setQuery={setQuery} />
 
       <h3>Add a new contact</h3>
