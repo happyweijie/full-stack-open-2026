@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import weatherService from '../services/weather';
 
 const WeatherDetail = ({ country }) => {
-
   const [weatherData, setWeatherData] = useState(null);
 
+  const lat = country.capitalInfo.latlng[0];
+  const long = country.capitalInfo.latlng[1];
+
+  // fetch weather data when component mounts or when lat/long changes
   useEffect(() => {
     weatherService
-      .getWeather(
-        country.capitalInfo.latlng[0],
-        country.capitalInfo.latlng[1]
-      )
+      .getWeather(lat, long)
       .then(data => setWeatherData(data));
-  }, [country]);
+  }, [lat, long]); // run effect when lat or long changes
 
   const displayName = country.capital.length >= 1 
     ? country.capital[0] 
