@@ -22,7 +22,12 @@ const CountryDetail = ({ country }) => {
 					.map(lang => <li key={lang}>{lang}</li>)}
 			</ul>
 
-			<img src={country.flags.png} alt={country.flags.alt} style={flagStyle}/>
+			<img 
+				src={country.flags.png} 
+				alt={country.flags.alt}
+				width="200px"
+				style={flagStyle}
+			/>
 			
 			<WeatherDetail country={country} />
 		</div>
