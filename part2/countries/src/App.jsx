@@ -6,16 +6,18 @@ import CountryDetail from './components/CountryDetail';
 function App() {
   const [countries, setCountries] = useState([]);
   const [query, setQuery] = useState('');
+  const handleQueryChange = (event) => {
+    setQuery(event.target.value);
+  };
+  const displayCountryView = (country) => () => {
+    setQuery(country.name.common);
+  }
 
   useEffect(() => {
     countriesService
       .getAll()
       .then(countriesList => setCountries(countriesList));
   }, [])
-  
-  const handleChange = (event) => {
-    setQuery(event.target.value);
-  };
 
   const searchResults = countries
     .filter(c => c.name.common.toLowerCase().includes(query.toLowerCase()));
@@ -31,7 +33,10 @@ function App() {
 
     if (searchResults.length > 1) {
       return searchResults.map(country => (
-        <p key={country.name.common}>{country.name.common}</p>
+        <p key={country.name.common}>
+          {country.name.common}
+          <button onClick={displayCountryView(country)}>Show</button>
+        </p>
       ))
     }
 
@@ -49,7 +54,7 @@ function App() {
         type="text" 
         name="query" 
         value={query} 
-        onChange={handleChange} 
+        onChange={handleQueryChange} 
       />
 
       {renderResults()}
