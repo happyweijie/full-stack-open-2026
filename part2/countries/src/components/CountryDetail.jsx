@@ -1,3 +1,5 @@
+import WeatherDetail from "./WeatherDetail";
+
 const CountryDetail = ({ country }) => {
 
 	const flagStyle = {
@@ -21,6 +23,8 @@ const CountryDetail = ({ country }) => {
 			</ul>
 
 			<img src={country.flags.png} alt={country.flags.alt} style={flagStyle}/>
+			
+			<WeatherDetail country={country} />
 		</div>
 	);
 };
