@@ -19,19 +19,24 @@ function App() {
       .then(countriesList => setCountries(countriesList));
   }, [])
 
+  const normalizedQuery = query.trim().toLowerCase();
   const searchResults = countries
-    .filter(c => c.name.common.toLowerCase().includes(query.toLowerCase()));
+    .filter(c => c.name.common.toLowerCase().includes(normalizedQuery));
 
   const renderResults = () => {
-    if (query === '') {
-      return null
-    }
-
     if (searchResults.length > 10) {
       return <p>Too many countries, specify another filter</p>
     }
 
     if (searchResults.length > 1) {
+
+      if (searchResults.some(c => c.name.common.toLowerCase() === normalizedQuery)) {
+        return <
+          CountryDetail 
+          country={searchResults.find(c => c.name.common.toLowerCase() === normalizedQuery)} 
+        />
+      }
+
       return searchResults.map(country => (
         <p key={country.name.common}>
           {country.name.common}
@@ -57,7 +62,7 @@ function App() {
         onChange={handleQueryChange} 
       />
 
-      {renderResults()}
+      {normalizedQuery === '' ? null : renderResults()}
     </div>
   );
 }
