@@ -25,17 +25,34 @@ let persons = [
     }
 ];
 
+// Get all persons
 app.get('/api/persons', (req, resp) => {
   resp.json(persons);
 });
+
+// Info page
 app.get('/info', (req, resp) => {
   const time = new Date();
 
   resp.send(`
     <p>Phonebook has info for ${persons.length} people</p>
-    
+
     <p>${time}</p>
     `);
+});
+
+// Get a single person by ID
+app.get('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+  const person = persons.find(p => p.id === id);
+
+  if (person) {
+    res.json(person);
+  } else {
+    res.status(404).json({ 
+      error: 'Person not found' 
+    });
+  }
 });
 
 const PORT = 3001;
