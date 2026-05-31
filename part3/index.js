@@ -26,15 +26,15 @@ let persons = [
 ];
 
 // Get all persons
-app.get('/api/persons', (req, resp) => {
-  resp.json(persons);
+app.get('/api/persons', (req, res) => {
+  res.json(persons);
 });
 
 // Info page
-app.get('/info', (req, resp) => {
+app.get('/info', (req, res) => {
   const time = new Date();
 
-  resp.send(`
+  res.send(`
     <p>Phonebook has info for ${persons.length} people</p>
 
     <p>${time}</p>
@@ -45,28 +45,28 @@ app.get('/info', (req, resp) => {
 app.get('/api/persons/:id', (req, res) => {
   const id = req.params.id;
   const person = persons.find(p => p.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
+  
+  if (!person) {
     res.status(404).json({ 
       error: 'Person not found' 
-    });
+    });  
   }
+    
+  res.json(person);
 });
 
 // Delete person
 app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id;
 
-  if (persons.some(p => p.id === id)) {
-    persons = persons.filter(p => p.id !== id);
-    res.status(204).end();
-  } else {
+  if (!persons.some(p => p.id === id)) {
     res.status(404).json({ 
       error: 'Person not found' 
-    });
+    });   
   }
+  
+  persons = persons.filter(p => p.id !== id);
+  res.status(204).end();
 });
 
 const PORT = 3001;
