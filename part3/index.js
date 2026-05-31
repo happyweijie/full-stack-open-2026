@@ -30,6 +30,29 @@ app.get('/api/persons', (req, res) => {
   res.json(persons);
 });
 
+// Add person
+const generateId = () => {
+  const maxId =  (persons.length > 0
+    ? Math.max(...persons.map(p =>Number(p.id)))
+    : 0) + 1;
+
+  const randomId = Math.floor(Math.random() * (1_000_000 - maxId) + maxId);
+  return String(randomId);
+};
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number
+  };
+
+  persons = persons.concat(person);
+  res.json(person);
+});
+
 // Info page
 app.get('/info', (req, res) => {
   const time = new Date();
