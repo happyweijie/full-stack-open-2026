@@ -18,15 +18,6 @@ app.get('/api/persons', (req, res) => {
 });
 
 // Add person
-const generateId = () => {
-  const maxId =  (persons.length > 0
-    ? Math.max(...persons.map(p =>Number(p.id)))
-    : 0) + 1;
-
-  const randomId = Math.floor(Math.random() * (1_000_000 - maxId) + maxId);
-  return String(randomId);
-};
-
 app.post('/api/persons', (req, res) => {
   const body = req.body;
 
@@ -37,21 +28,15 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
-  // Check if name already exists  
-  if (persons.some(p => p.name === body.name)) {
-    return res.status(400).json({ 
-      error: 'Name must be unique' 
-    });
-  }
-
-  const person = {
-    id: generateId(),
+  const person = new Person({
     name: body.name,
     number: body.number
-  };
+  });
 
-  persons = persons.concat(person);
-  res.json(person);
+  person.save()
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    });
 });
 
 // Info page
