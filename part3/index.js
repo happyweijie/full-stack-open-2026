@@ -66,16 +66,8 @@ app.get('/api/persons/:id', (req, res) => {
 
 // Delete person
 app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
-
-  if (!persons.some(p => p.id === id)) {
-    res.status(404).json({ 
-      error: 'Person not found' 
-    });   
-  }
-  
-  persons = persons.filter(p => p.id !== id);
-  res.status(204).end();
+  Person.findByIdAndDelete(req.params.id)
+    .then((result) => res.status(204).end());
 });
 
 const PORT = process.env.PORT;
