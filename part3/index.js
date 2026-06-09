@@ -65,10 +65,30 @@ app.get('/api/persons/:id', (req, res) => {
 });
 
 // Delete person
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then((result) => res.status(204).end());
+    .then(result => res.status(204).end())
+    .catch(error => next(error));
 });
+
+// error handler
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  
+  next(error);
+}
+
+// middleware for unknown endpoint
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
