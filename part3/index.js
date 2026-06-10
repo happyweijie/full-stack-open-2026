@@ -41,13 +41,16 @@ app.post('/api/persons', (req, res) => {
 
 // Info page
 app.get('/info', (req, res) => {
-  const time = new Date();
+  Person.find({})
+    .then(persons => {
+      const time = new Date();
 
-  res.send(`
-    <p>Phonebook has info for ${persons.length} people</p>
+      res.send(`
+        <p>Phonebook has info for ${persons.length} people</p>
 
-    <p>${time}</p>
-    `);
+        <p>${time}</p>
+        `);
+    });
 });
 
 // Get a single person by ID
