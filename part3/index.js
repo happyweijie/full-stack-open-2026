@@ -71,6 +71,33 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
+// Update person's phone number
+app.put('/api/persons/:id', (req, res, next) => {
+  const { number } = req.body;
+
+  Person.findById(req.params.id)
+    .then(person => {
+      // Make sure the person exists
+      if (!person) {
+        return res.status(404).json({ 
+          error: 'Person not found' 
+        });
+      }
+
+      // Ensure number is sent in request
+      if (!number) {
+        return res.status(400).json({
+          error: 'Number missing'
+        });
+      }
+      person.number = number;
+
+      return person.save()
+        .then(updatedPerson => res.json(updatedPerson));
+    })
+    .catch(error => next(error));
+});
+
 // error handler
 const errorHandler = (error, req, res, next) => {
   console.log(error.message);
