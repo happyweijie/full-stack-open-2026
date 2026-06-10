@@ -76,7 +76,7 @@ const errorHandler = (error, req, res, next) => {
   console.log(error.message);
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
+    return res.status(400).send({ error: 'malformatted id' })
   }
   
   next(error);
