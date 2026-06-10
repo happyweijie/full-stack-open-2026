@@ -51,17 +51,19 @@ app.get('/info', (req, res) => {
 });
 
 // Get a single person by ID
-app.get('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
-  const person = persons.find(p => p.id === id);
-  
-  if (!person) {
-    res.status(404).json({ 
-      error: 'Person not found' 
-    });  
-  }
-    
-  res.json(person);
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      // Make sure the person exists
+      if (!person) {
+        return res.status(404).json({ 
+          error: 'Person not found' 
+        });
+      }
+
+      return res.json(person);
+    })
+    .catch(error => next(error));
 });
 
 // Delete person
