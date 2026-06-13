@@ -79,7 +79,11 @@ const App = () => {
             'success'
           )
         })
-        
+        .catch(error => {
+          showNotification(
+            error.response.data.error, 
+            'error'
+          )
   }
 
   const handleDeletePerson = (name) => {
