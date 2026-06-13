@@ -26,4 +26,7 @@ personSchema.set('toJSON', {
   }
 });
 
+// enable validators for update
+const opts = { runValidators: true };
+
 module.exports = mongoose.model('Person', personSchema);
