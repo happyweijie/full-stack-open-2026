@@ -84,6 +84,7 @@ const App = () => {
             error.response.data.error, 
             'error'
           )
+        })
   }
 
   const handleDeletePerson = (name) => {
