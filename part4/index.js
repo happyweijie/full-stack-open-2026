@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const config = require('./utils/config')
+const logger = require('./utils/logger')
 const Blog = require('./models/blog')
 
 const app = express()
@@ -26,5 +27,5 @@ app.post('/api/blogs', (request, response) => {
 
 const PORT = config.PORT || 3003
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info(`Server running on port ${PORT}`)
 })
