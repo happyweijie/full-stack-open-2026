@@ -5,7 +5,7 @@
     "description": "Phonebook API",
     "version": "1.0.0"
   },
-  "host": "phonebook-io5n.onrender.com/",
+  "host": "phonebook-io5n.onrender.com",
   "basePath": "/",
   "schemes": [
     "https"
