@@ -6,7 +6,10 @@ const doc = {
     title: 'Phonebook API',
     description: 'Phonebook API'
   },
-  host: 'https://phonebook-io5n.onrender.com'
+  host: 'phonebook-io5n.onrender.com/',
+  schemes: ['https'],
+  consumes: ['application/json'],
+  produces: ['application/json'],
 }
 
 const outputFile = './swagger-output.json'

@@ -1,4 +1,5 @@
 require('dotenv').config()
+const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./swagger-output.json')
 const express = require('express')
@@ -8,10 +9,11 @@ const Person = require('./modules/person')
 const app = express()
 
 morgan.token('body', req => JSON.stringify(req['body']))
+app.use(cors())
 app.use(express.json())
 app.use(express.static('dist'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
-app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.get('/api/persons', (req, res) => {
   Person.find({})
