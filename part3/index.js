@@ -1,5 +1,6 @@
-
 require('dotenv').config()
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger-output.json')
 const express = require('express')
 const morgan = require('morgan')
 const Person = require('./modules/person')
@@ -10,11 +11,26 @@ morgan.token('body', req => JSON.stringify(req['body']))
 app.use(express.json())
 app.use(express.static('dist'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-// Get all persons
 app.get('/api/persons', (req, res) => {
   Person.find({})
     .then((persons) => res.json(persons))
+})
+
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      // Make sure the person exists
+      if (!person) {
+        return res.status(404).json({
+          error: 'Person not found'
+        })
+      }
+
+      return res.json(person)
+    })
+    .catch(error => next(error))
 })
 
 // Add person
@@ -52,22 +68,6 @@ app.get('/info', (req, res) => {
         <p>${time}</p>
         `)
     })
-})
-
-// Get a single person by ID
-app.get('/api/persons/:id', (req, res, next) => {
-  Person.findById(req.params.id)
-    .then(person => {
-      // Make sure the person exists
-      if (!person) {
-        return res.status(404).json({
-          error: 'Person not found'
-        })
-      }
-
-      return res.json(person)
-    })
-    .catch(error => next(error))
 })
 
 // Delete person
