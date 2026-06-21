@@ -14,6 +14,7 @@ const LIST_WITH_ONE_BLOG = [
     ]
 
 // likes: 7, 5, 12
+// 1 blog by Michael Chan, 2 blogs by Edsger W. Dijkstra
 const BLOGS = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -84,6 +85,31 @@ describe('favourite blog of ', () => {
     assert.deepStrictEqual(
       listHelper.favouriteBlog(BLOGS),
       BLOGS[2]
+    )
+  })
+})
+
+
+describe('most blogs ', () => { 
+  test('of list with one blog is the author and 1', () => {
+    const expectedRes = {
+      author: LIST_WITH_ONE_BLOG.at(0).author,
+      blogs: 1
+    }
+
+    assert.deepStrictEqual(
+      listHelper.mostBlogs(LIST_WITH_ONE_BLOG), expectedRes
+    )
+  })
+
+  test('of list with multiple blogs is correct', () => {
+    const expectedRes = {
+      author: "Edsger W. Dijkstra",
+      blogs: 2
+    }
+
+    assert.deepStrictEqual(
+      listHelper.mostBlogs(BLOGS), expectedRes
     )
   })
 })
