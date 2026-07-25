@@ -58,7 +58,7 @@ test('a valid blog can be added', async () => {
   assert(blogsAtEnd.some(blog => blog.title === newBlog.title))
 })
 
-test.only('a blog has likes default to 0 if unspecified', async () => {
+test('a blog has likes default to 0 if unspecified', async () => {
   const newBlog = {
     title: 'Test Blog 3',
     author: 'ronald',
@@ -70,6 +70,28 @@ test.only('a blog has likes default to 0 if unspecified', async () => {
 
   const resultBlog = response.body
   assert.strictEqual(resultBlog.likes, 0)
+})
+
+test.only('a blog with no title is not added', async () => {
+  const newBlog = {
+    author: 'ronald',
+    url: 'www.google.com',
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test.only('a blog with no url is not added', async () => {
+  const newBlog = {
+    title: 'Test Blog 3',
+    author: 'ronald',
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
 })
 
 after(async () => {
