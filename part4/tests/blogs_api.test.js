@@ -72,7 +72,7 @@ test('a blog has likes default to 0 if unspecified', async () => {
   assert.strictEqual(resultBlog.likes, 0)
 })
 
-test.only('a blog with no title is not added', async () => {
+test('a blog with no title is not added', async () => {
   const newBlog = {
     author: 'ronald',
     url: 'www.google.com',
@@ -83,7 +83,7 @@ test.only('a blog with no title is not added', async () => {
     .expect(400)
 })
 
-test.only('a blog with no url is not added', async () => {
+test('a blog with no url is not added', async () => {
   const newBlog = {
     title: 'Test Blog 3',
     author: 'ronald',
