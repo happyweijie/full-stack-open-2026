@@ -25,6 +25,20 @@ test('all blogs are returned', async () => {
   assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test('all blogs have id as unique identifier', async () => {
+  const blogs = await helper.blogsInDb()
+
+  // assert that _id is deleted
+  assert(blogs.every(blog => !('_id' in blog)))
+  
+  // assert that id exists for all blogs
+  assert(blogs.every(blog => 'id' in blog))
+
+  // assert id is unique
+  assert.strictEqual(new Set(blogs.map(blog => blog.id)).size, blogs.length)
+
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
