@@ -39,7 +39,7 @@ test('all blogs have id as unique identifier', async () => {
 
 })
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Test Blog 3',
     author: 'ronald',
@@ -56,6 +56,20 @@ test.only('a valid blog can be added', async () => {
 
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
   assert(blogsAtEnd.some(blog => blog.title === newBlog.title))
+})
+
+test.only('a blog has likes default to 0 if unspecified', async () => {
+  const newBlog = {
+    title: 'Test Blog 3',
+    author: 'ronald',
+    url: 'www.google.com',
+  }
+
+  const response = await api.post('/api/blogs')
+    .send(newBlog)
+
+  const resultBlog = response.body
+  assert.strictEqual(resultBlog.likes, 0)
 })
 
 after(async () => {
