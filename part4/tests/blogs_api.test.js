@@ -3,28 +3,14 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const helper = require('./test_helper')
 const Blog = require('../models/blog')
 
 const api = supertest(app)
 
-const initialBlogs = [
-  {
-    title: 'Test Blog 1',
-    author: 'john',
-    url: 'www.example.com',
-    likes: 0,
-  }, 
-  {
-    title: 'Test Blog 2',
-    author: 'jane',
-    url: 'www.example.com',
-    likes: 1,
-  }
-]
-
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(initialBlogs)
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 test('blogs returned as json', async () => {
@@ -36,7 +22,7 @@ test('blogs returned as json', async () => {
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
 
-  assert.strictEqual(response.body.length, initialBlogs.length)
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
 after(async () => {
