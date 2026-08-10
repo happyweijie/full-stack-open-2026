@@ -24,7 +24,7 @@ describe('when there is initially one user in db', () => {
   })
 
   describe('creating a new user', () => {
-    test('succeeds with fresh username', async () => {
+    test('succeeds with fresh username and valid password', async () => {
       const usersAtStart = await helper.usersInDb()
       
       const newUser = {
@@ -99,6 +99,45 @@ describe('when there is initially one user in db', () => {
         .expect('Content-Type', /application\/json/)
 
       assert(result.body.error.includes('`username` is required'))
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('fails with proper statuscode and message if password is missing', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'Superuser',
+      }
+
+      const result = await api.post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      assert(result.body.error.includes('`password` is required'))
+
+      const usersAtEnd = await helper.usersInDb()
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('fails with proper statuscode and message if password is too short', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'Superuser',
+        password: 'pw',
+      }
+
+      const result = await api.post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      assert(result.body.error.includes('shorter than the minimum allowed length (3)'))
 
       const usersAtEnd = await helper.usersInDb()
       assert.strictEqual(usersAtEnd.length, usersAtStart.length)
