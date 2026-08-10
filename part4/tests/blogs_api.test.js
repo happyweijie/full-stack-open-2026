@@ -5,13 +5,25 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
-    await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+
+    await helper.createDummyUser()
+    const dummyUser = await helper.getDummyUser()
+
+    const blogsWithUser = helper.initialBlogs
+      .map(blog => ({
+        ...blog,
+        user: dummyUser.id
+      }))
+
+    await Blog.insertMany(blogsWithUser)
   })
 
   //=============== Fetching all blogs ===========
@@ -45,6 +57,8 @@ describe('when there is initially some blogs saved', () => {
   //============= Adding a new blog ================
   describe('when adding a new blog', () => {
     test('a valid blog can be added', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+
       const newBlog = {
         title: 'Test Blog 3',
         author: 'ronald',
@@ -59,7 +73,7 @@ describe('when there is initially some blogs saved', () => {
 
       const blogsAtEnd = await helper.blogsInDb()
 
-      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+      assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
       assert(blogsAtEnd.some(blog => blog.title === newBlog.title))
     })
 
@@ -116,7 +130,7 @@ describe('when there is initially some blogs saved', () => {
 
     test('succeeds with status code 204 even if id does not exist', async () => {
       const blogsAtStart = await helper.blogsInDb()
-      const validNonexistingId = helper.nonExistingId()
+      const validNonexistingId = await helper.nonExistingBlogId()
 
       await api.delete(`/api/blogs/${validNonexistingId}`)
         .expect(204)
@@ -160,7 +174,8 @@ describe('when there is initially some blogs saved', () => {
         likes: 20
       }
 
-      await api.put(`/api/blogs/${helper.nonExistingId()}`)
+      const validNonexistingId = await helper.nonExistingBlogId()
+      await api.put(`/api/blogs/${validNonexistingId}`)
         .send(updatedBlogContent)
         .expect(404)
     })

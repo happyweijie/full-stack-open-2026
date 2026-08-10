@@ -30,7 +30,7 @@ const usersInDb = async () => {
 
 const invalidId = '5a3d5da59070081a82a3445'
 
-const nonExistingId = () => {
+const nonExistingBlogId = async () => {
   const blog = new Blog({
       title: 'Will delete this',
       author: 'john',
@@ -38,12 +38,33 @@ const nonExistingId = () => {
       likes: 0,
     })
 
-  blog.save()
-  blog.deleteOne()
+  await blog.save()
+  await blog.deleteOne()
 
   return blog.toJSON().id
 }
 
+const createDummyUser = async () => {
+  const user = new User({
+    username: 'dummyuser',
+    name: 'Dummy User',
+    passwordHash: 'hashedpassword'
+  })
+
+  const savedUser = await user.save()
+  return savedUser
+}
+
+const getDummyUser = async () => {
+  const users = await usersInDb()
+  return users[0]
+}
+
 module.exports = {
-  initialBlogs, blogsInDb, usersInDb, invalidId, nonExistingId
+  initialBlogs, 
+  createDummyUser, 
+  getDummyUser, 
+  blogsInDb, 
+  usersInDb, 
+  nonExistingBlogId,
 }
