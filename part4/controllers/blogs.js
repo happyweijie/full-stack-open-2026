@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -9,17 +10,36 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
+const getTokenFrom = (request) => {
+  const auth = request.get('authorization')
+
+  if (auth && auth.startsWith('Bearer ')) {
+    return auth.replace('Bearer ', '')
+  }
+
+  return null
+}
+
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
+  const decodedUserToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedUserToken) {
+    return response.status(401)
+      .json({ error: 'invalid token' })
+  }
+
+  // Get author of post from decoded token
+  const user = await User.findById(decodedUserToken.id)
+  if (!user) {
+    return response.status(400)
+      .json({ error: 'UserId missing or not valid' })
+  }
 
   if (!body.title || !body.url) {
     return response.status(400).json({
       error: 'title or url missing'
     })
   }
-
-  // For now, use the first user as the author
-  const user = await User.findOne({})
 
   const blog = new Blog({
     ...body,
