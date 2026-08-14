@@ -35,8 +35,22 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (request, response, next) => {
+  const auth = request.get('authorization')
+
+  // Strict backend middleware (case-insensitivity not allowed)
+  if (auth && auth.startsWith('Bearer ')) {
+    request.token = auth.replace('Bearer ', '')
+  } else {
+    request.token = null
+  }
+
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor
 }
