@@ -1,4 +1,7 @@
 const logger = require('./logger')
+const User = require('../models/user')
+
+const jwt = require('jsonwebtoken')
 
 // middleware for logging the details of the requests
 const requestLogger = (request, response, next) => {
@@ -48,9 +51,35 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
+/**
+ * Middleware to extract user object from json web token.
+ * Note: This middleware should only be registered in routes
+ * which require authenticated requests.
+ * 
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ * @returns 
+ */
+const userExtractor = async (request, response, next) => {
+  const decodedUserToken = jwt.verify(request.token, process.env.SECRET)
+  
+  // Get user object from decoded token
+  const user = await User.findById(decodedUserToken.id)
+  if (!user) {
+    return response.status(400)
+      .json({ error: 'UserId missing or not valid' })
+  }
+
+  // inject user into token
+  request.user = user
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 }
