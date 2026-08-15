@@ -68,7 +68,7 @@ const userExtractor = async (request, response, next) => {
   const user = await User.findById(decodedUserToken.id)
   if (!user) {
     return response.status(400)
-      .json({ error: 'UserId missing or not valid' })
+      .json({ error: 'token missing or not valid' })
   }
 
   // inject user into token
