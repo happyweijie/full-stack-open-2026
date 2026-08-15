@@ -56,61 +56,83 @@ describe('when there is initially some blogs saved', () => {
   
   //============= Adding a new blog ================
   describe('when adding a new blog', () => {
-    test('a valid blog can be added', async () => {
-      const blogsAtStart = await helper.blogsInDb()
+    describe(' a valid jwt token is provided', () => {
+      test('a valid blog can be added', async () => {
+        const blogsAtStart = await helper.blogsInDb()
 
+        const newBlog = {
+          title: 'Test Blog 3',
+          author: 'ronald',
+          url: 'www.google.com',
+          likes: 7,
+        }
+
+        await api.post('/api/blogs')
+          .set('Authorization', `Bearer ${await helper.getDummyUserToken()}`)
+          .send(newBlog)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
+        assert(blogsAtEnd.some(blog => blog.title === newBlog.title))
+      })
+
+      test('a blog has likes default to 0 if unspecified', async () => {
+        const newBlogWithNoLikes = {
+          title: 'Test Blog 3',
+          author: 'ronald',
+          url: 'www.google.com',
+        }
+
+        const response = await api.post('/api/blogs')
+          .set('Authorization', `Bearer ${await helper.getDummyUserToken()}`)
+          .send(newBlogWithNoLikes)
+          .expect(201)
+
+        const resultBlog = response.body
+        assert.strictEqual(resultBlog.likes, 0)
+      })
+
+      test('a blog with no title is not added', async () => {
+        const newBlogWithNoTitle = {
+          author: 'ronald',
+          url: 'www.google.com',
+          likes: 7
+        }
+
+        await api.post('/api/blogs')
+          .set('Authorization', `Bearer ${await helper.getDummyUserToken()}`)
+          .send(newBlogWithNoTitle)
+          .expect(400)
+      })
+
+      test('a blog with no url is not added', async () => {
+        const newBlogWithNoUrl = {
+          title: 'Test Blog 3',
+          author: 'ronald',
+          likes: 7
+        }
+
+        await api.post('/api/blogs')
+          .set('Authorization', `Bearer ${await helper.getDummyUserToken()}`)
+          .send(newBlogWithNoUrl)
+          .expect(400)
+      })
+    })
+
+    test('and no jwt token provided, the blog is not added', async () => {
       const newBlog = {
-        title: 'Test Blog 3',
+        title: 'Test Blog',
         author: 'ronald',
         url: 'www.google.com',
-        likes: 0,
+        likes: 7
       }
 
       await api.post('/api/blogs')
         .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-
-      const blogsAtEnd = await helper.blogsInDb()
-
-      assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
-      assert(blogsAtEnd.some(blog => blog.title === newBlog.title))
-    })
-
-    test('a blog has likes default to 0 if unspecified', async () => {
-      const newBlog = {
-        title: 'Test Blog 3',
-        author: 'ronald',
-        url: 'www.google.com',
-      }
-
-      const response = await api.post('/api/blogs')
-        .send(newBlog)
-
-      const resultBlog = response.body
-      assert.strictEqual(resultBlog.likes, 0)
-    })
-
-    test('a blog with no title is not added', async () => {
-      const newBlog = {
-        author: 'ronald',
-        url: 'www.google.com',
-      }
-
-      await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-    })
-
-    test('a blog with no url is not added', async () => {
-      const newBlog = {
-        title: 'Test Blog 3',
-        author: 'ronald',
-      }
-
-      await api.post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
+        .expect(401)
     })
   })
 

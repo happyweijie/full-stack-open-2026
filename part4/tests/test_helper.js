@@ -1,6 +1,8 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+const jwt = require('jsonwebtoken')
+
 const initialBlogs = [
   {
     title: 'Test Blog 1',
@@ -56,14 +58,29 @@ const createDummyUser = async () => {
 }
 
 const getDummyUser = async () => {
-  const users = await usersInDb()
-  return users[0]
+  const user = await User.findOne({ username: 'dummyuser' })
+  if (!user) {
+    return await createDummyUser()
+  }
+
+  return user
+}
+
+const getDummyUserToken = async () => {
+  const dummyUser = await getDummyUser()
+
+  return jwt.sign(
+    { username: dummyUser.username, id: dummyUser._id },
+    process.env.SECRET,
+    { expiresIn: 60 * 60 }
+  )
 }
 
 module.exports = {
   initialBlogs, 
   createDummyUser, 
   getDummyUser, 
+  getDummyUserToken,
   blogsInDb, 
   usersInDb, 
   nonExistingBlogId,
