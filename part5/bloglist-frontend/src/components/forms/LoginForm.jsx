@@ -17,8 +17,9 @@ const LoginForm = ({ setUser }) => {
 
       // set user
       setUser(user)
-      setUsername('')
-      setPassword('')
+      // Note: no need to unset username and password fields
+      // the component will be unmounted on login
+      // on logout, a new instance will be created
 
       // save user to local storage
       window.localStorage.setItem(
@@ -37,7 +38,7 @@ const LoginForm = ({ setUser }) => {
       <div>
         <label>
           username
-          <input 
+          <input
             type="text"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
@@ -48,7 +49,7 @@ const LoginForm = ({ setUser }) => {
       <div>
         <label>
           password
-          <input 
+          <input
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
