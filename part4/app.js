@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
@@ -10,6 +11,9 @@ const loginRouter = require('./controllers/login')
 
 
 const app = express()
+app.use(cors({
+  origin: ['http://localhost:5173']
+}))
 
 // Connect to MongoDB
 mongoose.set('strictQuery', false)
