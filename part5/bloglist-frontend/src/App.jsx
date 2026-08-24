@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import LoginForm from './components/forms/LoginForm'
+import LoginForm, { LOCAL_STORAGE_KEY } from './components/forms/LoginForm'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -11,6 +11,16 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
+  }, [])
+
+  useEffect(() => {
+    const loggedInUserJson = window.localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (loggedInUserJson) {
+      const user = JSON.parse(loggedInUserJson)
+
+      setUser(user)
+    }
   }, [])
 
   // Login page

@@ -1,6 +1,8 @@
 import { useState } from "react"
 import loginService from "../../services/login"
 
+export const LOCAL_STORAGE_KEY = 'blogAppUser'
+
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -13,10 +15,15 @@ const LoginForm = ({ setUser }) => {
     try {
       const user = await loginService.login({ username, password })
 
+      // set user
       setUser(user)
       setUsername('')
       setPassword('')
-      
+
+      // save user to local storage
+      window.localStorage.setItem(
+        'blogAppUser', JSON.stringify(user)
+      )
     } catch {
       console.log('invalid credential')
     }
