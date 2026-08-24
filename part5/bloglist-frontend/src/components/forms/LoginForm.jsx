@@ -1,13 +1,26 @@
 import { useState } from "react"
+import loginService from "../../services/login"
 
-const LoginForm = () => {
+const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
 
     console.log('clicked login')
+
+    try {
+      const user = await loginService.login({ username, password })
+
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      
+    } catch {
+      console.log('invalid credential')
+    }
+    
   }
 
   return (
@@ -37,7 +50,6 @@ const LoginForm = () => {
       </div>
 
       <button type="submit">login</button>
-      
     </form>
   )
 }

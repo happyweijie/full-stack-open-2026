@@ -17,7 +17,7 @@ const App = () => {
   if (!user) {
     return (
       <div>
-        <LoginForm />
+        <LoginForm setUser={setUser} />
       </div>
     )
   }
@@ -25,6 +25,10 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <p>
+        <i>{user.name}</i> is logged in
+      </p>
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
