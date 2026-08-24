@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm, { LOCAL_STORAGE_KEY } from './components/forms/LoginForm'
+import LogoutForm from './components/forms/LogoutForm'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
       <p>
         <i>{user.name}</i> is logged in
       </p>
+      <LogoutForm setUser={setUser} />
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
