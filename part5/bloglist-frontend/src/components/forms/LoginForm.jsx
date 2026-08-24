@@ -39,6 +39,7 @@ const LoginForm = ({ setUser }) => {
         <label>
           username
           <input
+            required={true}
             type="text"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
@@ -50,6 +51,7 @@ const LoginForm = ({ setUser }) => {
         <label>
           password
           <input
+            required={true}
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
