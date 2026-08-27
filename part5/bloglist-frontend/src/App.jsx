@@ -11,7 +11,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs(blogs)
     )  
   }, [])
 
@@ -41,9 +41,10 @@ const App = () => {
       <p>
         <i>{user.name}</i> is logged in
       </p>
+
       <LogoutForm setUser={setUser} />
 
-      <BlogForm />
+      <BlogForm setBlogs={setBlogs} />
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
