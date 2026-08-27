@@ -1,5 +1,6 @@
 import { useState } from "react"
 import loginService from "../../services/login"
+import blogService from "../../services/blogs"
 
 export const LOCAL_STORAGE_KEY = 'blogAppUser'
 
@@ -17,6 +18,7 @@ const LoginForm = ({ setUser }) => {
 
       // set user
       setUser(user)
+      blogService.setToken(user.token)
       // Note: no need to unset username and password fields
       // the component will be unmounted on login
       // on logout, a new instance will be created

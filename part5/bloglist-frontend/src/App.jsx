@@ -19,9 +19,10 @@ const App = () => {
     const loggedInUserJson = window.localStorage.getItem(LOCAL_STORAGE_KEY)
 
     if (loggedInUserJson) {
-      const user = JSON.parse(loggedInUserJson)
+      const userJson = JSON.parse(loggedInUserJson)
 
-      setUser(user)
+      setUser(userJson)
+      blogService.setToken(userJson.token)
     }
   }, [])
 
@@ -43,7 +44,7 @@ const App = () => {
       <LogoutForm setUser={setUser} />
 
       <BlogForm />
-      
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
