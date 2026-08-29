@@ -4,7 +4,7 @@ import blogService from "../../services/blogs"
 
 export const LOCAL_STORAGE_KEY = 'blogAppUser'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = ({ setUser, showNotification }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -27,8 +27,8 @@ const LoginForm = ({ setUser }) => {
       window.localStorage.setItem(
         'blogAppUser', JSON.stringify(user)
       )
-    } catch {
-      console.log('invalid credential')
+    } catch { // exception triggered by axios
+      showNotification('Incorrect username or password', 'error')
     }
     
   }
